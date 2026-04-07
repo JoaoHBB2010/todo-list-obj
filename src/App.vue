@@ -15,6 +15,9 @@ const tarefasPendentes = computed(() => {
 const tarefasConcluidas = computed(() => {
     return tarefas.value.filter(t => t.status == 'concluida').length;
 })
+const tarefasFiltradas = computed(() => {
+    return tarefas.value.filter(t =>t.desc == usuario.value)
+})
 
 function add(){
     if(posicaoAlterar.value == -1){
@@ -54,7 +57,7 @@ function marcarConcluida(id){
         <input type="text" v-model="novaTarefa" @keyup.enter = "add"> <button @click="add">add</button>
 
         <ul>
-            <li v-for="item in tarefas" :key="item.id">
+            <li v-for="item in tarefasFiltradas" :key="item.id">
 
                 <span  @click="marcarConcluida(item.id)" :class="{concluida: item.status == 'concluida'}">
                     {{ item.desc }}
