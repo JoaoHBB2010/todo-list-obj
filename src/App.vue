@@ -16,7 +16,12 @@ const tarefasConcluidas = computed(() => {
     return tarefas.value.filter(t => t.status == 'concluida').length;
 })
 const tarefasFiltradas = computed(() => {
-    return tarefas.value.filter(t =>t.desc == usuario.value)
+ if (usuario.value.trim() == ''){
+  return tarefas.value;
+ }
+ else{
+  return tarefas.value.filter(t => t.desc.includes(usuario.value))
+ }
 })
 
 function add(){
@@ -48,6 +53,9 @@ function marcarConcluida(id){
         tarefas.value[posicao].status = 'pendente';
     }
 }
+function ordenar(){
+  tarefas.value.sort((a,b) => a.desc.localeCompare(b.desc,'pt-BR'))
+}
 
 </script>
 
@@ -69,9 +77,8 @@ function marcarConcluida(id){
             </li>
             
         </ul>
-        <input type="text" v-model="usuario">
-        <button @click=" tarefas.value.filter(t => t.desc.includes(usuario))">Filtrar</button>
-
+        <input type="text" v-model="usuario" placeholder="Filtrar...">
+        <button @click.prevent="ordenar()">Ordenar</button>
         
     </div>
     <div>
