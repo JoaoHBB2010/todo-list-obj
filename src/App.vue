@@ -1,5 +1,7 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed } from 'vue';
+import TaskChild from './components/TaskChild.vue';
+
 const tarefas = ref([
     {id: 1, desc:'Prova Geografia', status: 'pendente'},
     {id: 2, desc:'Prova História', status: 'concluida'},
@@ -35,13 +37,13 @@ function add(){
     }
     novaTarefa.value = '';
 }
-function delet(item){
-   const posicao = tarefas.value.findIndex(t => t.id === item.id);
+function delet(idTarefa){
+   const posicao = tarefas.value.findIndex(t => t.id === idTarefa);
    tarefas.value.splice(posicao,1);
    return false
 }
-function edit(item){
-    posicaoAlterar.value =  tarefas.value.findIndex(t => t.id === item.id);
+function edit(idTarefa){
+    posicaoAlterar.value =  tarefas.value.findIndex(t => t.id === idTarefa);
     novaTarefa.value = tarefas.value[posicaoAlterar.value].desc;
 }
 function marcarConcluida(id){
@@ -65,7 +67,7 @@ function ordenar(){
         <input type="text" v-model="novaTarefa" @keyup.enter = "add"> <button @click="add">add</button>
 
         <ul>
-            <li v-for="item in tarefasFiltradas" :key="item.id">
+            <!-- <li v-for="item in tarefasFiltradas" :key="item.id">
 
                 <span  @click="marcarConcluida(item.id)" :class="{concluida: item.status == 'concluida'}">
                     {{ item.desc }}
@@ -74,17 +76,23 @@ function ordenar(){
                 <span><a href="#" @click.prevent="delet(item)">Excluir</a></span>
                 <span><a href="#" @click.prevent="edit(item)">Edit</a></span>
                  
-            </li>
+            </li> -->
+
+            <TaskChild v-for="tarefa in tarefasFiltradas" :key="tarefa.id" :id="tarefa.id" :descricao="tarefa.desc" :status="tarefa.status" @excluir="delet" @editar="edit">
+                
+            </TaskChild>
             
         </ul>
         <input type="text" v-model="usuario" placeholder="Filtrar...">
         <button @click.prevent="ordenar()">Ordenar</button>
-        
-    </div>
-    <div>
+        <div>
+
         <span>Pendentes: {{ tarefasPendentes }}</span>
         <span> Cocluidas: {{ tarefasConcluidas }}</span>
+
+        </div>
     </div>
+   
 </template>
 
 <style scoped>
